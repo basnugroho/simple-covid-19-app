@@ -66,12 +66,14 @@ struct Home: View {
                 .clipShape(Capsule())
                 .padding(.top, 10)
                 
-                
+                // affected, death
                 HStack(spacing: 15) {
                     VStack(spacing: 12) {
                         Text("Affected")
+                            .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
                         Text("221,333")
                             .fontWeight(.bold)
+                            .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
                     }
                     .padding(.vertical)
                     .frame(width: UIScreen.main.bounds.width / 2 - 30)
@@ -80,19 +82,63 @@ struct Home: View {
                     
                     VStack(spacing: 12) {
                         Text("Death")
+                            .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
                         Text("21,333")
                             .fontWeight(.bold)
+                            .font(.title)
                     }
                     .padding(.vertical)
                     .frame(width: UIScreen.main.bounds.width / 2 - 30)
                     .background(Color("death"))
                     .cornerRadius(12)
                 }
+                .foregroundColor(.white)
+                .padding(.top, 10)
                 
+                HStack(spacing: 15) {
+                    VStack(spacing: 12) {
+                        Text("Recovered")
+                            .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+                        Text("21,333")
+                            .fontWeight(.bold)
+                            .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
+                    }
+                    .padding(.vertical)
+                    .frame(width: UIScreen.main.bounds.width / 3 - 30)
+                    .background(Color("recovered"))
+                    .cornerRadius(12)
+                    
+                    VStack(spacing: 12) {
+                        Text("Active")
+                            .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+                        Text("21,333")
+                            .fontWeight(.bold)
+                            .font(.title)
+                    }
+                    .padding(.vertical)
+                    .frame(width: UIScreen.main.bounds.width / 3 - 30)
+                    .background(Color("active"))
+                    .cornerRadius(12)
+                    
+                    VStack(spacing: 12) {
+                        Text("Serious")
+                            .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+                        Text("21,333")
+                            .fontWeight(.bold)
+                            .font(.title)
+                    }
+                    .padding(.vertical)
+                    .frame(width: UIScreen.main.bounds.width / 3 - 30)
+                    .background(Color("serious"))
+                    .cornerRadius(12)
+                }
+                .foregroundColor(.white)
+                .padding(.top, 10)
             }
             .padding(.horizontal)
             .padding(.bottom, 45)
             .background(Color("bg"))
+            
             Spacer()
         }
         .edgesIgnoringSafeArea(.top)
