@@ -181,3 +181,50 @@ struct Home: View {
         .edgesIgnoringSafeArea(.top)
     }
 }
+
+func getData() {
+    
+}
+
+// Data Models For JSON Parsing....
+
+struct Daily: Identifiable{
+    
+    var id : Int
+    var day : String
+    var cases : Int
+}
+
+struct MainData : Decodable{
+    
+    var deaths : Int
+    var recovered : Int
+    var active : Int
+    var critical : Int
+    var cases : Int
+}
+
+struct MyCountry : Decodable {
+    
+    var timeline : [String : [String : Int]]
+}
+
+struct Global : Decodable {
+    
+    var cases : [String : Int]
+}
+
+struct Indicator : UIViewRepresentable {
+    
+    func makeUIView(context: Context) ->  UIActivityIndicatorView {
+        
+        let view = UIActivityIndicatorView(style: .large)
+        view.startAnimating()
+        return view
+    }
+    
+    func updateUIView(_ uiView:  UIActivityIndicatorView, context: Context) {
+        
+        
+    }
+}
