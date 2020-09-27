@@ -139,7 +139,44 @@ struct Home: View {
             .padding(.bottom, 45)
             .background(Color("bg"))
             
-            Spacer()
+            VStack(spacing: 15){
+                HStack {
+                    Text("Last 7 days")
+                        .font(.title)
+                        .foregroundColor(.black)
+                        Spacer()
+                }
+                .padding(.top)
+                //Graph
+                HStack {
+                    ForEach(0...6, id: \.self) {_ in
+                        VStack(spacing: 10) {
+                            Text("330K")
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                            
+                            GeometryReader {g in
+                                VStack {
+                                    Spacer(minLength: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/)
+                                    Capsule()
+                                    .fill(Color("death"))
+                                    .frame(width: 15)
+                                }
+                            }
+                            
+                            Text("4/4/20")
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                            
+                        }
+                    }
+                }
+            }
+            .padding(.horizontal)
+            .background(Color.white)
+            .cornerRadius(20)
+            .padding(.bottom, -30)
+            .offset(y: -30)
         }
         .edgesIgnoringSafeArea(.top)
     }
