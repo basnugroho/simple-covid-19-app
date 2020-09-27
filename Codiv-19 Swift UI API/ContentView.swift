@@ -21,14 +21,16 @@ struct ContentView_Previews: PreviewProvider {
 
 struct Home: View {
     @State var index = 0
-    @State var main: MainData!
+    @State var main : MainData!
+    @State var daily : [Daily] = []
+    @State var last : Int = 0
     
     var body: some View {
         VStack {
             if self.main != nil {
                 VStack {
                     VStack(spacing: 18) {
-                        
+
                         HStack {
                             Text("Statistics")
                                 .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
@@ -41,7 +43,7 @@ struct Home: View {
                                     .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
                             })
                         }
-                        .padding(.top, UIApplication.shared.windows.first?.safeAreaInsets.top) // safe area inset
+                        .padding(.top, (UIApplication.shared.windows.first?.safeAreaInsets.top)! + 15)
                         
                         HStack {
                             Button(action: {
@@ -110,7 +112,6 @@ struct Home: View {
                                     .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
                                 Text("21,333")
                                     .fontWeight(.bold)
-                                    .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
                             }
                             .padding(.vertical)
                             .frame(width: UIScreen.main.bounds.width / 3 - 30)
@@ -122,7 +123,6 @@ struct Home: View {
                                     .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
                                 Text("\(self.main.active)")
                                     .fontWeight(.bold)
-                                    .font(.title)
                             }
                             .padding(.vertical)
                             .frame(width: UIScreen.main.bounds.width / 3 - 30)
@@ -134,7 +134,6 @@ struct Home: View {
                                     .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
                                 Text("\(self.main.critical)")
                                     .fontWeight(.bold)
-                                    .font(.title)
                             }
                             .padding(.vertical)
                             .frame(width: UIScreen.main.bounds.width / 3 - 30)
@@ -158,25 +157,22 @@ struct Home: View {
                         .padding(.top)
                         //Graph
                         HStack {
-                            ForEach(0...6, id: \.self) {_ in
+                            ForEach(0...6, id: \.self) {i in
                                 VStack(spacing: 10) {
                                     Text("330K")
                                         .font(.caption)
                                         .foregroundColor(.gray)
-                                    
                                     GeometryReader {g in
                                         VStack {
                                             Spacer(minLength: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/)
-                                            Capsule()
+                                            Rectangle()
                                             .fill(Color("death"))
-                                            .frame(width: 15)
+                                                .frame(width: 15)
                                         }
                                     }
-                                    
                                     Text("4/4/20")
                                         .font(.caption)
                                         .foregroundColor(.gray)
-                                    
                                 }
                             }
                         }
@@ -187,6 +183,9 @@ struct Home: View {
                     .padding(.bottom, -30)
                     .offset(y: -30)
                 }
+            }
+            else {
+                Indicator()
             }
         }
         .edgesIgnoringSafeArea(.top)
@@ -213,7 +212,42 @@ struct Home: View {
             self.main = json
         }
         .resume()
+        
+        var url1 = ""
+        if self.index == 0 {
+            url1 = "https://corona.lmao.ninja/v2/countries/usa?lastdays=7"
+        } else {
+            url1 = "https://corona.lmao.ninja/v2/historical/all?lastdays=7"
+        }
+        
+        let session1 = URLSession(configuration: .default)
+        session1.dataTask(with: URL(string: url1)!) {
+            (data, _, err) in
+            if err != nil {
+                print((err?.localizedDescription)!)
+                return
+            }
+            var count = 0
+            var cases: [String: Int] = [:]
+            if self.index == 0 {
+                let json = try! JSONDecoder().decode(MyCountry.self, from: data!)
+                cases = json.timeline["cases"]!
+            } else {
+                let json = try! JSONDecoder().decode(Global.self, from: data!)
+                cases = json.cases
+            }
+            
+            for i in cases {
+                self.daily.append(Daily(id: count, day: i.key, cases: i.value))
+                count += 1
+            }
+            self.last = self.daily.last!.cases
+        }
     }
+    
+//    func getHeight(value: Int, height: CGFloat)->CGFloat {
+//        return 0
+//    }
 }
 
 
