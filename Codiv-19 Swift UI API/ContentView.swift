@@ -73,8 +73,22 @@ struct Home: View {
                         Text("221,333")
                             .fontWeight(.bold)
                     }
+                    .padding(.vertical)
+                    .frame(width: UIScreen.main.bounds.width / 2 - 30)
+                    .background(Color("affected"))
+                    .cornerRadius(12)
                     
+                    VStack(spacing: 12) {
+                        Text("Death")
+                        Text("21,333")
+                            .fontWeight(.bold)
+                    }
+                    .padding(.vertical)
+                    .frame(width: UIScreen.main.bounds.width / 2 - 30)
+                    .background(Color("death"))
+                    .cornerRadius(12)
                 }
+                
             }
             .padding(.horizontal)
             .padding(.bottom, 45)
