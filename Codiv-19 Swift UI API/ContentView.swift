@@ -37,7 +37,9 @@ struct Home: View {
                                 .fontWeight(.bold)
                                 .foregroundColor(.white)
                             Spacer()
-                            Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
+                            Button(action: {
+                                self.showDialog()
+                            }, label: {
                                 Text("Indonesia")
                                     .foregroundColor(.white)
                                     .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
@@ -253,6 +255,18 @@ struct Home: View {
     
     func getHeight(value: Int, height: CGFloat)->CGFloat {
         return 0
+    }
+    
+    func showDialog() {
+        let alert = UIAlertController(title: "Country", message: "Type a country", preferredStyle: .alert)
+        alert.addTextField { (_) in
+        }
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: {
+            (_) in
+            print(alert.textFields![0].text!)
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .destructive, handler: nil))
+        UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
     }
 }
 
