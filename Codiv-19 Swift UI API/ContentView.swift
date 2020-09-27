@@ -24,13 +24,14 @@ struct Home: View {
     @State var main : MainData!
     @State var daily : [Daily] = []
     @State var last : Int = 0
+    @State var country = "indonesia"
+    @State var alert = false
     
     var body: some View {
         VStack {
             if self.main != nil && !self.daily.isEmpty {
                 VStack {
                     VStack(spacing: 18) {
-
                         HStack {
                             Text("Statistics")
                                 .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
@@ -40,7 +41,7 @@ struct Home: View {
                             Button(action: {
                                 self.showDialog()
                             }, label: {
-                                Text("Indonesia")
+                                Text(self.country.uppercased())
                                     .foregroundColor(.white)
                                     .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
                             })
@@ -110,6 +111,7 @@ struct Home: View {
                         }
                         .foregroundColor(.white)
                         .padding(.top, 10)
+                        
                         //recovered active, serious
                         HStack(spacing: 15) {
                             VStack(spacing: 12) {
@@ -196,6 +198,9 @@ struct Home: View {
             }
         }
         .edgesIgnoringSafeArea(.top)
+        .alert(isPresented: self.$alert, content: {
+            Alert(title: Text("Error"), message: Text("Invalid country name"), dismissButton: .destructive(Text("Ok")))
+        })
         .onAppear {
             self.getData()
         }
@@ -204,7 +209,7 @@ struct Home: View {
     func getData() {
         var url = ""
         if self.index == 0 {
-            url = "https://corona.lmao.ninja/v2/countries/usa?yesterday=false"
+            url = "https://corona.lmao.ninja/v2/countries/\(self.country)?yesterday=false"
         } else {
             url = "https://corona.lmao.ninja/v2/all"
         }
@@ -222,7 +227,7 @@ struct Home: View {
         
         var url1 = ""
         if self.index == 0 {
-            url1 = "https://corona.lmao.ninja/v2/historical/usa?lastdays=7"
+            url1 = "https://corona.lmao.ninja/v2/historical/\(self.country)?lastdays=7"
         } else {
             url1 = "https://corona.lmao.ninja/v2/historical/all?lastdays=7"
         }
@@ -253,8 +258,14 @@ struct Home: View {
         .resume()
     }
     
-    func getHeight(value: Int, height: CGFloat)->CGFloat {
-        return 0
+    func getHeight(value : Int,height:CGFloat)->CGFloat{
+        if self.last != 0 {
+            let converted = CGFloat(value) / CGFloat(self.last)
+            return converted * height
+        }
+        else{
+            return 0
+        }
     }
     
     func showDialog() {
@@ -263,6 +274,16 @@ struct Home: View {
         }
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: {
             (_) in
+            for i in countryList {
+                if i.lowercased() == alert.textFields![0].text!.lowercased() {
+                    self.country = alert.textFields![0].text!.lowercased()
+                    self.main = nil
+                    self.daily.removeAll()
+                    self.getData()
+                    return
+                }
+            }
+            self.alert.toggle()
             print(alert.textFields![0].text!)
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .destructive, handler: nil))
