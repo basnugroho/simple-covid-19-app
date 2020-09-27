@@ -27,7 +27,7 @@ struct Home: View {
     
     var body: some View {
         VStack {
-            if self.main != nil {
+            if self.main != nil && !self.daily.isEmpty {
                 VStack {
                     VStack(spacing: 18) {
 
@@ -38,7 +38,7 @@ struct Home: View {
                                 .foregroundColor(.white)
                             Spacer()
                             Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
-                                Text("USA")
+                                Text("Indonesia")
                                     .foregroundColor(.white)
                                     .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
                             })
@@ -49,20 +49,22 @@ struct Home: View {
                             Button(action: {
                                 self.index = 0
                                 self.main = nil
+                                self.daily.removeAll()
                                 self.getData()
-                                
                             }, label: {
                                 Text("My Country")
                                     .foregroundColor(self.index == 0 ? .black : .white)
                                     .padding(.vertical, 12)
                                     .frame(width: (UIScreen.main.bounds.width / 2) - 30)
                             })
-                            .background(self.index == 0 ? Color.white : Color.black)
                             .clipShape(Capsule())
+                            .background(self.index == 0 ? Color.white : Color.black)
+                            
                             
                             Button(action: {
                                 self.index = 1
                                 self.main = nil
+                                self.daily.removeAll()
                                 self.getData()
                             }, label: {
                                 Text("Global")
@@ -70,8 +72,9 @@ struct Home: View {
                                     .padding(.vertical, 12)
                                     .frame(width: (UIScreen.main.bounds.width / 2) - 30)
                             })
-                            .background(self.index == 1 ? Color.white : Color.black)
                             .clipShape(Capsule())
+                            .background(self.index == 1 ? Color.white : Color.black)
+                            
                         }
                         .background(Color.black.opacity(0.25))
                         .clipShape(Capsule())
@@ -105,7 +108,7 @@ struct Home: View {
                         }
                         .foregroundColor(.white)
                         .padding(.top, 10)
-                        
+                        //recovered active, serious
                         HStack(spacing: 15) {
                             VStack(spacing: 12) {
                                 Text("Recovered")
@@ -157,9 +160,10 @@ struct Home: View {
                         .padding(.top)
                         //Graph
                         HStack {
-                            ForEach(0...6, id: \.self) {i in
+                            ForEach(self.daily) {i in
                                 VStack(spacing: 10) {
-                                    Text("330K")
+                                    Text("\(i.cases / 1000)K")
+                                        .lineLimit(1)
                                         .font(.caption)
                                         .foregroundColor(.gray)
                                     GeometryReader {g in
@@ -167,10 +171,11 @@ struct Home: View {
                                             Spacer(minLength: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/)
                                             Rectangle()
                                             .fill(Color("death"))
-                                                .frame(width: 15)
+                                                .frame(width: 15, height: self.getHeight(value: i.cases, height: g.frame(in: .global).height))
                                         }
                                     }
-                                    Text("4/4/20")
+                                    Text(i.day)
+                                        .lineLimit(1)
                                         .font(.caption)
                                         .foregroundColor(.gray)
                                 }
@@ -215,7 +220,7 @@ struct Home: View {
         
         var url1 = ""
         if self.index == 0 {
-            url1 = "https://corona.lmao.ninja/v2/countries/usa?lastdays=7"
+            url1 = "https://corona.lmao.ninja/v2/historical/usa?lastdays=7"
         } else {
             url1 = "https://corona.lmao.ninja/v2/historical/all?lastdays=7"
         }
@@ -243,11 +248,12 @@ struct Home: View {
             }
             self.last = self.daily.last!.cases
         }
+        .resume()
     }
     
-//    func getHeight(value: Int, height: CGFloat)->CGFloat {
-//        return 0
-//    }
+    func getHeight(value: Int, height: CGFloat)->CGFloat {
+        return 0
+    }
 }
 
 
